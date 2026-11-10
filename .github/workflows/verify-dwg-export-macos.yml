@@ -1,0 +1,21 @@
+name: Verify DWG export on macOS
+on:
+  push:
+    branches: [codex/verify-dwg-export-macos]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: c4830160a7e5f765ddc88b1960003d6c5abfdca0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: python -m pip install numpy pyparsing fonttools typing_extensions pytest Pillow
+      - run: python -m pytest -q tests/test_08_addons/test_828_odafc.py integration_tests/test_odafc.py
+        env:
+          PYTHONPATH: src
